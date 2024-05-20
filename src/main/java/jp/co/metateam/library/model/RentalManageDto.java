@@ -60,15 +60,15 @@ public class RentalManageDto {
     public Optional<String> statusCheck(Integer preStatus, Integer newStatus, Date expectedRentalOn, Date expectedReturnOn){
         Date now = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-        if (preStatus == RentalStatus.RENT_WAIT.getValue() && newStatus == RentalStatus.RETURNED.getValue()
-            || preStatus == RentalStatus.RENTAlING.getValue() && newStatus == RentalStatus.RENT_WAIT.getValue() 
-            || preStatus == RentalStatus.RENTAlING.getValue() && newStatus == RentalStatus.CANCELED.getValue()
-            || preStatus == RentalStatus.RETURNED.getValue() && newStatus == RentalStatus.RENT_WAIT.getValue()
-            || preStatus == RentalStatus.RETURNED.getValue() && newStatus == RentalStatus.RENTAlING.getValue()
-            || preStatus == RentalStatus.RETURNED.getValue() && newStatus == RentalStatus.CANCELED.getValue()
-            || preStatus == RentalStatus.CANCELED.getValue() && newStatus == RentalStatus.RENT_WAIT.getValue()
-            || preStatus == RentalStatus.CANCELED.getValue() && newStatus == RentalStatus.RENTAlING.getValue()
-            || preStatus == RentalStatus.CANCELED.getValue() && newStatus == RentalStatus.RETURNED.getValue()) {
+        if ((preStatus == RentalStatus.RENT_WAIT.getValue() && newStatus == RentalStatus.RETURNED.getValue())
+            || (preStatus == RentalStatus.RENTAlING.getValue() && newStatus == RentalStatus.RENT_WAIT.getValue())
+            || (preStatus == RentalStatus.RENTAlING.getValue() && newStatus == RentalStatus.CANCELED.getValue())
+            || (preStatus == RentalStatus.RETURNED.getValue() && newStatus == RentalStatus.RENT_WAIT.getValue())
+            || (preStatus == RentalStatus.RETURNED.getValue() && newStatus == RentalStatus.RENTAlING.getValue())
+            || (preStatus == RentalStatus.RETURNED.getValue() && newStatus == RentalStatus.CANCELED.getValue())
+            || (preStatus == RentalStatus.CANCELED.getValue() && newStatus == RentalStatus.RENT_WAIT.getValue())
+            || (preStatus == RentalStatus.CANCELED.getValue() && newStatus == RentalStatus.RENTAlING.getValue())
+            || (preStatus == RentalStatus.CANCELED.getValue() && newStatus == RentalStatus.RETURNED.getValue())) {
             return Optional.of("そのステータスは無効です");
         } else if (preStatus == RentalStatus.RENT_WAIT.getValue() && newStatus == RentalStatus.RENTAlING.getValue() && !(expectedRentalOn.compareTo(now) == 0)) {
             return Optional.of("貸出予定日を今日の日付に設定してください");
