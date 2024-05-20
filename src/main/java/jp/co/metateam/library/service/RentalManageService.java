@@ -106,7 +106,11 @@ public class RentalManageService {
                 throw new Exception("Stock not found.");
             }
 
-            RentalManage rentalManage = new RentalManage();
+            RentalManage rentalManage = this.rentalManageRepository.findById(rentalManageDto.getId()).orElse(null);
+            if (rentalManage == null) {
+                throw new Exception("RentalInfo not found.");
+            }
+
             rentalManage = setRentalStatusDate(rentalManage, rentalManageDto.getStatus());
 
             rentalManage.setId(rentalManageDto.getId());
