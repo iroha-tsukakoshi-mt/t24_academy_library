@@ -85,8 +85,8 @@ public class RentalManageDto {
 
         if (status == RentalStatus.RENTAlING.getValue() && !(expectedRentalOn.compareTo(now) == 0)) {
             return Optional.of("貸出予定日を今日の日付に設定してください");
-        } else if (status == RentalStatus.RETURNED.getValue()
-                   || status == RentalStatus.CANCELED.getValue()){
+        } else if ((status == RentalStatus.RETURNED.getValue())
+                   || (status == RentalStatus.CANCELED.getValue())){
             return Optional.of("そのステータスは選択できません");
         }
         return Optional.empty();   
