@@ -21,7 +21,7 @@
                     </span>
                 </div>
 
-                <form id="stock_add_form" th:object="${stockDto}" th:action="@{/stock/add}" method="post">
+                <form id="stock_add_form" th:object="${stockDto}" th:action="@{/stock/add}" method="post" novalidate>
                     <div class="mb30">
                         <label for="bookSelector">書籍名<span class="text-red asterisk">＊</span></label>
                         <select id="bookSelector" class="form_input" name="bookId" placeholder="書籍名を選択" required>

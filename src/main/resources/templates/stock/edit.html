@@ -22,7 +22,7 @@
                 </div>
 
                 <form id="stock_edit_form" th:object="${stockDto}" th:action="@{/stock/{id}/edit(id=*{id})}"
-                    method="post">
+                    method="post" novalidate>
                     <div class="mb30">
                         <label for="bookSelector">書籍名</label>
                         <div th:text="${stockDto.bookMst.title}"></div>
