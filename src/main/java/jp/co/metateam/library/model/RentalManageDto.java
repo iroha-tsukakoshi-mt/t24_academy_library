@@ -91,5 +91,12 @@ public class RentalManageDto {
         }
         return Optional.empty();   
     }
+
+    public Optional<String> dateError(){
+        if(expectedReturnOn.before(expectedRentalOn)){
+            return Optional.of("返却予定日は貸出予定日より後の日付を入力してください");
+        }
+        return Optional.empty();
+    }
 }
 

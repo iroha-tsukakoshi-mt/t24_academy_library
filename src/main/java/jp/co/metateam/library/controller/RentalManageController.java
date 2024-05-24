@@ -108,6 +108,12 @@ public class RentalManageController {
                 throw new Exception("DateRepeating error.");
             }
 
+            Optional<String> dateError = rentalManageDto.dateError(); //変更前と変更後の貸出ステータスと変更後の貸出予定日と返却予定日を取得、aは任意の変数名
+            if(dateError.isPresent()) {
+                result.addError(new FieldError("rentalManageDto", "expectedReturnOn", dateError.get())); //resultにエラーを追加する
+                throw new Exception("Validation error.");
+            }
+
             this.rentalManageService.save(rentalManageDto); //登録処理
 
             return "redirect:/rental/index";
@@ -166,6 +172,12 @@ public class RentalManageController {
             if(rentalAbleError.isPresent()) {
                 result.addError(new FieldError("rentalManageDto", "status", rentalAbleError.get()));
                 throw new Exception("DateRepeating error.");
+            }
+
+            Optional<String> dateError = rentalManageDto.dateError(); //変更前と変更後の貸出ステータスと変更後の貸出予定日と返却予定日を取得、aは任意の変数名
+            if(dateError.isPresent()) {
+                result.addError(new FieldError("rentalManageDto", "expectedReturnOn", dateError.get())); //resultにエラーを追加する
+                throw new Exception("Validation error.");
             }
 
             rentalManageService.update(Long.valueOf(id), rentalManageDto); //更新処理、rentalManageServiceにあるupdateメソッドを（）内の引数で呼ぶ
