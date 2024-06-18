@@ -36,9 +36,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <!-- FIXME ControllerやService側の処理とともに表示方法を考える -->
-                                <td th:each="stock, stat : ${stocks}" th:text="${stock}"></td>
+                            <tr th:each="stock, stat : ${stocks}">
+                                <td th:text="${stock.title}"></td>
+                                <td th:text="${stock.stockCount}"></td>
+                                <td th:each="rental : ${stock.rentalCountList}" >
+                                    <a th:href = "@{/rental/{stockId}/{rentalDate}/add(stockId=${rental.stockIdList}, rentalDate=${rental.expectedRentalOn})}" th:if="${rental.rentalCount != '×'}" > 
+                                        <span th:text="${rental.rentalCount}"></span>
+                                    </a>
+                                    <span th:text="${rental.rentalCount}" th:if="${rental.rentalCount == '×'}"></span>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
