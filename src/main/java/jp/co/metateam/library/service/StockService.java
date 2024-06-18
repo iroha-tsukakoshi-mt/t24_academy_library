@@ -146,8 +146,7 @@ public class StockService {
                     rentalCountDto = rentalableCount(stockList, rentalCountDto, dateCheck);
                     
                     //カレンダーの日付が過去日・貸出可能数が0の場合「×を表示」
-                    Object obj = 0;
-                    if (currentDate.isAfter(dateCheck) || rentalCountDto.getRentalCount() == obj ){
+                    if (currentDate.isAfter(dateCheck) || rentalCountDto.getRentalCount() == (Object)0 ){
                         rentalCountDto.setRentalCount("×");
                     //カレンダーの日付が今日以降
                     }
