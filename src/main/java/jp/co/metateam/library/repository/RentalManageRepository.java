@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Date;
 
+import org.antlr.v4.runtime.atn.SemanticContext.OR;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
 
 import jp.co.metateam.library.model.RentalManage;
+import jp.co.metateam.library.model.Stock;
 
 @Repository
 public interface RentalManageRepository extends JpaRepository<RentalManage, Long> {
@@ -33,5 +35,10 @@ public interface RentalManageRepository extends JpaRepository<RentalManage, Long
 
     @Query("SELECT COUNT (*) FROM RentalManage WHERE stock.id = ?1 AND status IN (0,1) AND (expectedReturnOn < ?2 OR ?3 < expectedRentalOn)")
     Integer datecountAdd(String stockId, Date expected_return_on, Date expected_rental_on);
+
+    //在庫カレンダー
+    @Query("SELECT rm FROM RentalManage rm WHERE rm.stock.id = ?1 AND rm.status IN (0,1)")
+    List<RentalManage> rentalCountCheck(String stock_id);
+    
 
 }

@@ -19,5 +19,6 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
 
 	Optional<Stock> findById(String id);
     
-    List<Stock> findByBookMstIdAndStatus(Long book_id,Integer status);
+    List<Stock> findByBookMstIdAndStatus(Long book_id, Integer status);
+
 }

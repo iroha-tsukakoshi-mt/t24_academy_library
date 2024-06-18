@@ -16,6 +16,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.validation.Valid;
 import jp.co.metateam.library.model.BookMst;
+import jp.co.metateam.library.model.BookMstDto;
+import jp.co.metateam.library.model.CalendarDto;
 import jp.co.metateam.library.model.Stock;
 import jp.co.metateam.library.model.StockDto;
 import jp.co.metateam.library.service.BookMstService;
@@ -135,6 +137,7 @@ public class StockController {
     @GetMapping("/stock/calendar")
     public String calendar(@RequestParam(required = false) Integer year, @RequestParam(required = false) Integer month, Model model) {
 
+        //カレンダー内の年月日をセット
         LocalDate today = year == null || month == null ? LocalDate.now() : LocalDate.of(year, month, 1);
         Integer targetYear = year == null ? today.getYear() : year;
         Integer targetMonth = today.getMonthValue();
@@ -143,14 +146,17 @@ public class StockController {
         Integer daysInMonth = startDate.lengthOfMonth();
 
         List<Object> daysOfWeek = this.stockService.generateDaysOfWeek(targetYear, targetMonth, startDate, daysInMonth);
-        List<String> stocks = this.stockService.generateValues(targetYear, targetMonth, daysInMonth);
+
+        //stockServiceのcalendarDtoListをリスト化
+        List<CalendarDto> calendarList = this.stockService.generateValues(targetYear, targetMonth, daysInMonth);
 
         model.addAttribute("targetYear", targetYear);
         model.addAttribute("targetMonth", targetMonth);
         model.addAttribute("daysOfWeek", daysOfWeek);
         model.addAttribute("daysInMonth", daysInMonth);
 
-        model.addAttribute("stocks", stocks);
+        model.addAttribute("stocks", calendarList);
+
 
         return "stock/calendar";
     }
