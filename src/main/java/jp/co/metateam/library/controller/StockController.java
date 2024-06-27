@@ -68,7 +68,7 @@ public class StockController {
     public String save(@Valid @ModelAttribute StockDto stockDto, BindingResult result, RedirectAttributes ra) {
         try {
             if(stockDto.getBookId() == null){
-                throw new Exception("Validation error.");   
+                throw new Exception("書籍名は必須です");
             }
 
             if (result.hasErrors()) {
