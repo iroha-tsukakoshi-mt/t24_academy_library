@@ -239,7 +239,7 @@ public class StockService {
     }
 
 
-    @Transactional
+    @Transactional //別クラスで作成したリスト(idList)を新しいリスト(stockList)に追加する
     public List<Stock> getList(List<String> idList){
         List <Stock> stockList = new ArrayList<>();
  
@@ -250,8 +250,7 @@ public class StockService {
  
             stockList.add(stock);  
  
- 
-        }
+            }
         return stockList;
     }
 
