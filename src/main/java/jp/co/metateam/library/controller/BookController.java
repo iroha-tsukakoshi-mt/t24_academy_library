@@ -10,11 +10,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.validation.Valid;
 import jp.co.metateam.library.model.BookMst;
 import jp.co.metateam.library.model.BookMstDto;
+import jp.co.metateam.library.model.Review;
+import jp.co.metateam.library.model.ReviewDto;
 import jp.co.metateam.library.service.BookMstService;
 import lombok.extern.log4j.Log4j2;
 
@@ -32,6 +35,7 @@ public class BookController {
         this.bookMstService = bookMstService;
     }
 
+
     @GetMapping("/book/index")
     public String index(Model model) {
         // 書籍を全件取得
@@ -42,6 +46,7 @@ public class BookController {
         return "book/index";
     }
 
+
     @GetMapping("/book/add")
     public String add(Model model) {
         if (!model.containsAttribute("bookMstDto")) {
@@ -51,6 +56,7 @@ public class BookController {
         return "book/add";
     }
     
+
     @PostMapping("/book/add")
     public String register(@Valid @ModelAttribute BookMstDto bookMstDto, BindingResult result, RedirectAttributes ra, Model model) {
         try {
@@ -81,6 +87,7 @@ public class BookController {
         }
     }
 
+
     @GetMapping("/book/{id}/edit")
     public String edit(@PathVariable("id") String id, Model model) {
         BookMst bookMst = this.bookMstService.findById(Long.valueOf(id)).orElse(null);
@@ -95,6 +102,7 @@ public class BookController {
         return "book/edit";
     }
     
+
     @PostMapping("/book/{id}/edit")
     public String update(@PathVariable("id") String id, @Valid @ModelAttribute BookMstDto bookMstDto, BindingResult result, Model model) {
         try {
@@ -121,4 +129,71 @@ public class BookController {
             return "book/edit";
         }
     }
+
+
+    @GetMapping("/book/{id}/{title}/review")
+    public String review(@PathVariable("id") Long bookId, @PathVariable("title") String title, Model model) {
+
+        List<Review> reviewList = this.bookMstService.reviewIndex(bookId);
+        
+        model.addAttribute("reviewList", reviewList);
+        model.addAttribute("bookId", bookId);
+        model.addAttribute("title", title);
+
+        return "book/review";
+    }
+
+
+    @GetMapping("/book/{id}/{title}/reviewAdd")
+    public String reviewAdd(@PathVariable("id") Long bookId, @PathVariable("title") String title, Model model) {
+
+        ReviewDto reviewDto = new ReviewDto();
+
+        BookMst bookMst = new BookMst();
+        bookMst.setId(bookId);
+        bookMst.setTitle(title);
+        reviewDto.setBookMst(bookMst);
+
+        model.addAttribute("reviewDto", reviewDto);
+        model.addAttribute("title", title);
+
+        return "book/reviewAdd";
+    }
+
+
+    @PostMapping("/book/{id}/{title}/reviewAdd")
+    public String reviewAdd(@RequestParam(name = "rate", required = false) Long rate, @PathVariable("id") Long bookId, @PathVariable("title") String title, @Valid @ModelAttribute ReviewDto reviewDto, BindingResult result, RedirectAttributes ra, Model model) {
+        reviewDto.setScore(rate);
+ 
+        try {
+
+            boolean validScore = bookMstService.isValidScore(reviewDto.getScore(), model);
+            boolean validBody = bookMstService.isValidBody(reviewDto.getBody(), model);
+
+            if (validScore || validBody) {
+                model.addAttribute("reviewDto", reviewDto);
+                return "book/reviewAdd";
+            }
+
+            if (result.hasErrors()) {
+                throw new Exception("Validation error.");
+            }
+
+            // 登録処理
+            this.bookMstService.reviewSave(reviewDto, bookId);
+            
+            return "redirect:/book/{id}/{title}/review";
+
+        } catch (Exception e) {
+
+            log.error(e.getMessage());
+
+            ra.addFlashAttribute("reviewDto", reviewDto);
+            ra.addFlashAttribute("org.springframework.validation.BindingResult.reviewDto", result);
+
+            return "/book/reviewAdd";
+        }
+    }
+
+
 }

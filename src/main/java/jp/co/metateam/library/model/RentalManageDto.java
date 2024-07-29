@@ -12,7 +12,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Optional;
 import jp.co.metateam.library.values.RentalStatus;
 
 import java.time.LocalDate;
@@ -92,6 +91,7 @@ public class RentalManageDto {
         return Optional.empty();   
     }
 
+    //日付妥当性チェック
     public Optional<String> dateError(){
         if(expectedReturnOn.before(expectedRentalOn)){
             return Optional.of("返却予定日は貸出予定日より後の日付を入力してください");

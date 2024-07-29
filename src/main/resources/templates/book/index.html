@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja" xmlns:th="http://www.thymeleaf.org">
+    
 <head th:replace="~{common :: meta_header('書籍一覧',~{::link},~{::script})}">
     <title th:text="${title}+' | MTLibrary'"></title>
     <link rel="stylesheet" th:href="@{/css/book/index.css}" />
@@ -21,11 +22,12 @@
                             <th>書籍名</th>
                             <th>ISBN</th>
                             <th>利用可能在庫数</th>
+                            <th>レビュー</th>
                         </tr>
                         <tr th:each="bookMst : ${bookMstList}">
                             <td th:inline="text">
                                 <div class="book_title_contents">
-                                    <a th:href="@{/book/{id}/edit(id=*{bookMst.id})}" class=""><img class="edit_icon" src="../images/icons/edit.png" alt="edit" /></a>
+                                    <a th:href="@{/book/{id}/edit(id=*{bookMst.id})}" class="edit_btn"><img class="edit_icon" src="../images/icons/edit.png" alt="edit" /></a>
                                     <a href="#" class="" onClick="openDeleteModal()"><img class="trash_icon" src="../images/icons/trash.png" alt="trash" /></a>
                                     <span>[[${bookMst.title}]]</span>
                                 </div>
@@ -34,6 +36,9 @@
                             <td th:inline="text">
                                 <span class="stockcount"> [[${bookMst.stockCount}]]冊</span>
                                 <a th:href="@{/stock/add}">在庫追加</a>
+                            </td>
+                            <td>
+                                <a th:href="@{/book/{id}/{title}/review(id=*{bookMst.id}, title=*{bookMst.title})}" class="review_btn">レビューを見る</a>
                             </td>
                         </tr>
                     </table>

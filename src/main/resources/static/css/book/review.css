@@ -1,0 +1,113 @@
+.review_btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+  height: 30px;
+  font-size: 18px;
+  text-align: center;
+  background-color: #9CF2D3;
+  color: #6D6D6E;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  padding: 10px 5px;
+}
+
+.review_btn img {
+  margin-right: 7px;
+  width: 20px;
+  height: 20px;
+}
+
+.review_btn:hover {
+  opacity: 0.6;
+}
+
+/*表部分のCSS*/
+.review_table {
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border-radius:0px;
+   }
+   
+   .review_table th{
+    border: solid 1px #B9B9B9;
+    background: rgba(0,0,0,0.06);
+    padding: 13px;
+    color: #545454;
+    font-size: 20px;
+   }
+   
+   .review_table td{
+    border: solid 1px #B9B9B9;
+    background: #FFFFFF;
+    padding: 13px;
+    font-size: 20px;
+    text-align: left;
+    vertical-align: top;
+   }
+   
+   .review_table td:nth-child(1){
+     width: 15%;
+   }
+   
+   .review_table td:nth-child(2){
+    width: 70%;
+   }
+   
+   .review_table td:nth-child(3){
+    width: 15%;
+   }
+   
+   .review_table td .trash_icon{
+    float: right;
+    width: 19px;
+   }
+
+  .star-rating {
+    text-align: center;
+    vertical-align: bottom;
+    position: relative;
+    font-size: 30px;
+  }
+  
+  .star-rating::before,
+  .star-rating::after {
+    content: "★★★★★";
+    color: #e1e1e1;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  
+  .star-rating::after {
+    color: #ffb448;
+    overflow: hidden;
+  }
+  
+  /* レーティングの間隔 */
+  .star-rating[data-rate="0"]::after {
+    width: 0;
+  }
+  
+  .star-rating[data-rate="1"]::after {
+    width: 30px;
+  }
+  
+  .star-rating[data-rate="2"]::after {
+    width: 60px;
+  }
+  
+  .star-rating[data-rate="3"]::after {
+    width: 90px;
+  }
+  
+  .star-rating[data-rate="4"]::after {
+    width: 120px;
+  }
+  
+  .star-rating[data-rate="5"]::after {
+    width: 150px;
+  }

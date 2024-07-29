@@ -1,5 +1,6 @@
 package jp.co.metateam.library.service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -8,26 +9,35 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import io.micrometer.common.util.StringUtils;
+import jakarta.validation.Valid;
 import jp.co.metateam.library.constants.Constants;
 import jp.co.metateam.library.model.BookMst;
 import jp.co.metateam.library.model.BookMstDto;
 import jp.co.metateam.library.model.Stock;
+import jp.co.metateam.library.model.StockDto;
 import jp.co.metateam.library.repository.BookMstRepository;
 import jp.co.metateam.library.repository.StockRepository;
+import jp.co.metateam.library.model.Review;
+import jp.co.metateam.library.model.ReviewDto;
+import jp.co.metateam.library.repository.ReviewRepository;
 
 @Service
 public class BookMstService {
 
     private final BookMstRepository bookMstRepository;
     private final StockRepository stockRepository;
+    private final ReviewRepository reviewRepository;
     
     @Autowired
-    public BookMstService(BookMstRepository bookMstRepository, StockRepository stockRepository){
+    public BookMstService(BookMstRepository bookMstRepository, StockRepository stockRepository, ReviewRepository reviewRepository){
         this.bookMstRepository = bookMstRepository;
         this.stockRepository = stockRepository;
+        this.reviewRepository = reviewRepository;
     }
 
     public List<BookMst> findAll() {
@@ -57,6 +67,7 @@ public class BookMstService {
 
         return bookMstDtoList;
     }
+
     
     @Transactional
     public void save(BookMstDto bookMstDto) {
@@ -72,6 +83,7 @@ public class BookMstService {
             throw e;
         }
     }
+
     
     @Transactional
     public void update(Long id, BookMstDto bookMstDto) throws Exception {
@@ -108,21 +120,56 @@ public class BookMstService {
         return false;
     }
 
-    // public boolean isValidTitle(String title, RedirectAttributes ra) {
-    //     if (StringUtils.isEmpty(title)) {
-    //         ra.addFlashAttribute("errTitle", "書籍タイトルは必須");
-    //         return true;
-    //     }
-    //     return false;
-    // }
 
-    // public boolean isValidIsbn(String isbn, RedirectAttributes ra) {
-    //     if (StringUtils.isEmpty(isbn) || isbn.length() != 13) {
-    //         ra.addFlashAttribute("errISBN", "ISBNは13文字で入力してください");
-    //         return true;
-    //     }
-    //     return false;
-    // }
+    @Transactional
+    public List<Review> reviewIndex(Long bookId) {
+
+        List<Review> reviewList = this.reviewRepository.reviewCheckList(bookId);
+
+        return reviewList;
+    }
+
+
+    @Transactional
+    public void reviewSave(ReviewDto reviewDto, Long id) throws Exception {
+        try {
+            Review review = new Review();
+            
+            BookMst bookMst = this.bookMstRepository.findById(id).orElse(null);
+            if (bookMst == null) {
+                throw new Exception("BookMst record not found.");
+            }
+
+            review.setScore(reviewDto.getScore());
+            review.setBody(reviewDto.getBody());
+            review.setBookMst(reviewDto.getBookMst());
+            
+            review.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+
+            // データベースへの保存
+            this.reviewRepository.save(review);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+
+    public boolean isValidScore(Long score, Model model) {
+        if (score == null || score < 1 || 5 < score) {
+            model.addAttribute("errScore", "評価は必須です");
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isValidBody(String body, Model model) {
+        if (StringUtils.isEmpty(body) || body.length() > 140) {
+            model.addAttribute("errBody", "レビューを正しく入力してください（140字以内）");
+            return true;
+        }
+        return false;
+    }
+
 }
 
 

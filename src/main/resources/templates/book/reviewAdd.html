@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+    
+<head th:replace="~{common :: meta_header('レビュー登録',~{::link},~{::script})}">
+    <title th:text="${title}+' | MTLibrary'"></title>
+    <link rel="stylesheet" th:href="@{/css/book/reviewAdd.css}" />
+    <script type="text/javascript" th:src="@{/js/book/reviewAdd.js}"></script>
+</head>
+
+<body>
+    <div class="contents">
+        <div th:replace="~{common :: main_sidebar}"></div>
+        <div class="main_contents">
+            <div th:replace="~{common :: header}"></div>
+            <div class="inner_contens">
+                <div class="page_title">レビュー登録</div>
+                <div class="page_contents">
+                    <form id="book_reviewAdd_form" th:object="${reviewDto}" th:action="@{/book/{id}/{title}/reviewAdd(id=*{bookMst.id}, title=*{bookMst.title})}" method="post">
+                        <div class="mb30" style="text-align: right;">
+                            <a th:href="@{/book/{id}/{title}/review(id=*{bookMst.id}, title=*{bookMst.title})}" class="link">← 書籍レビューへ戻る</a>
+                        </div>
+                        <div th:inline="text">
+                            <span class="bookTitle"> 書籍名：[[${title}]]</span>
+                        </div>
+                        <br>
+                        <br>
+                        <div>
+                            <span class="text-red">＊は必須項目です</span>
+                        </div>
+                        <br>
+                        <div class="mb30">
+                            <label for="title">評価（☆1~5）<span class="text-red asterisk">＊</span></label>
+                            <br>
+                                <div class="rate-form">
+                                    <input id="star5" type="radio" name="rate" th:value="5">
+                                    <label for="star5">★</label>
+                                    <input id="star4" type="radio" name="rate" th:value="4">
+                                    <label for="star4">★</label>
+                                    <input id="star3" type="radio" name="rate" th:value="3">
+                                    <label for="star3">★</label>
+                                    <input id="star2" type="radio" name="rate" th:value="2">
+                                    <label for="star2">★</label>
+                                    <input id="star1" type="radio" name="rate" th:value="1">
+                                    <label for="star1">★</label>
+                                </div>
+                                <div class="error_msg" th:if="${errScore}">
+                                  <p th:text="${errScore}" style="color: red"></p>
+                                </div>
+                            </br>
+                        </div>
+                        <div class="mb30">
+                            <label for="title">書籍レビュー<span class="text-red asterisk">＊</span></label>
+                            <br>
+                                <input class="form_input2" type="text" id="body" name="body" th:field="*{body}"
+                                    placeholder="レビューを入力" />
+                                <div class="error_msg" th:if="${errBody}">
+                                    <p th:text="${errBody}" style="color: red"></p>
+                                </div>
+                            </br>
+                        </div>
+                        <input type="hidden" name="bookMst" th:value="${bookMst}" />
+                        <div class="btn_block">
+                            <input id="submit_btn" type="submit" value="保存">
+                        </div>                        
+                        <input type="hidden" name="bookId" th:field="*{bookMst.id}" />
+                        <input type="hidden" name="title" th:field="*{bookMst.title}" />
+                    </form>                
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    <div th:replace="~{common :: footer}"></div>
+</body>
