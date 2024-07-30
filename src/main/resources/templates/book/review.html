@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+    
+<head th:replace="~{common :: meta_header('書籍レビュー',~{::link},~{::script})}">
+    <title th:text="${title}+' | MTLibrary'"></title>
+    <link rel="stylesheet" th:href="@{/css/book/review.css}" />
+    <script type="text/javascript" th:src="@{/js/book/review.js}"></script>
+</head>
+<body>
+    <div class="contents">
+        <div th:replace="~{common :: main_sidebar}"></div>
+        <div class="main_contents">
+            <div th:replace="~{common :: header}"></div>
+            <div class="inner_contens">
+                <div class="page_title">書籍レビュー</div>
+                <div class="page_contents">
+                    <div class="mb30" style="text-align: right;">
+                        <span>
+                            <a th:href="@{/book/index}" class="link">← 一覧へ戻る</a>
+                        </span>
+                    </div>
+                    <div class="inner_contens__operation">
+                        <a th:href="@{/book/{id}/{title}/reviewAdd(id=*{bookId}, title=*{title})}" class="review_btn"><img th:src="@{/images/icons/add.png}" alt="reviewAdd" />レビュー登録</a>
+                    </div>
+                    <div th:inline="text">
+                        <span class="bookTitle"> 書籍名：[[${title}]]</span>
+                    </div>
+                    <p></p>    <!--空白行-->
+                    <table class="review_table">
+                        <tr>
+                            <th>評価(☆1～5)</th>
+                            <th>レビュー内容</th>
+                            <th>登録日時</th>
+                        </tr>
+                        <tr th:each="review : ${reviewList}">
+                            <td class="reviewStar">
+                                <span class="star-rating" th:data-rate="${review.score}"></span>
+                            </td>
+                            <td th:text="${review.body}"></td>
+                            <td class="createDay_trash">
+                                <span th:text="${#dates.format(review.createdAt, ('yyyy/MM/dd'))}"></span>
+                                <a href="#" class="" style="text-align: right;" onClick="openDeleteModal()">
+                                    <img class="trash_icon" th:src="@{/images/icons/trash.png}" alt="trash">
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <div th:replace="~{common :: footer}"></div>
+</body>
